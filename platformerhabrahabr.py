@@ -8,7 +8,7 @@ from player import *
 from blocks import *
 
 #Объявляем переменные
-WIN_WIDTH = 900 #Ширина создаваемого окна
+WIN_WIDTH = 988    #Ширина создаваемого окна
 WIN_HEIGHT = 598 # Высота
 DISPLAY = (WIN_WIDTH, WIN_HEIGHT) # Группируем ширину и высоту в одну переменную
 BACKGROUND_COLOR = "#ffd299"
@@ -45,13 +45,13 @@ def main():
                                          # будем использовать как фон
     bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
     
-    hero = Player(55, 514) # создаем героя по (x,y) координатам
+    hero_2 = Player(55, 514) # создаем героя по (x,y) координатам
     left = right = False # по умолчанию - стоим
     up = False
 
-    hero_2 = Player(450, 514)  # создаем героя по (x,y) координатам
-    left = right = False  # по умолчанию - стоим
-    up = False
+    hero = Player(835, 514)  # создаем героя по (x,y) координатам
+    a = d = False  # по умолчанию - стоим
+    w = False
     
     entities = pygame.sprite.Group() # Все объекты
     platforms = [] # то, во что мы будем врезаться или опираться
@@ -60,30 +60,30 @@ def main():
     entities.add(hero_2)
            
     level = [
-       "-                                 -",
-       "-                                 -",
-       "-                                 -",
-       "-                                 -",
-       "-----                         -----",
-       "---                             ---",
-       "--    ---                        --",
-       "-      --                         -",
-       "-       -                         -",
-       "-       ---                       -",
-       "--   -----                       --",
-       "-       -                         -",
-       "-                                 -",
-       "-      --                         -",
-       "---     -                       ---",
-       "--                               --",
-       "-     ----                        -",
-       "-        -                        -",
-       "-----                         -----",
-       "-       --                        -",
-       "-                                 -",
-       "-                                 -",
-       "-----------------------------------",
-       "-----------------------------------"]
+       "-                                    -",
+       "-                                    -",
+       "-                                    -",
+       "-                                    -",
+       "-----                            -----",
+       "---     *                    *     ---",
+       "--    ---                    ---    --",
+       "-      --                    --      -",
+       "-       -                    -       -",
+       "-       ---                ---       -",
+       "--   -----                  -----   --",
+       "-       -                    -       -",
+       "-       *                    *       -",
+       "-      --                    --      -",
+       "---     -                    -     ---",
+       "--      *                    *      --",
+       "-     ----                  ----     -",
+       "-        -                  -        -",
+       "-----    *                  *    -----",
+       "-       --                  --       -",
+       "-                                    -",
+       "-                                    -",
+       "--------------------------------------",
+       "--------------------------------------"]
        
     timer = pygame.time.Clock()
     x=y=0 # координаты
@@ -93,6 +93,10 @@ def main():
                 pf = Platform(x,y)
                 entities.add(pf)
                 platforms.append(pf)
+            if col == "*":
+                bd = BlockDie(x, y)
+                entities.add(bd)
+                platforms.append(bd)
 
             x += PLATFORM_WIDTH #блоки платформы ставятся на ширине блоков
         y += PLATFORM_HEIGHT    #то же самое и с высотой
@@ -101,27 +105,28 @@ def main():
     total_level_width  = len(level[0])*PLATFORM_WIDTH # Высчитываем фактическую ширину уровня
     total_level_height = len(level)*PLATFORM_HEIGHT   # высоту
     
-    camera = Camera(camera_configure, total_level_width, total_level_height) 
-    
+    camera = Camera(camera_configure, total_level_width, total_level_height)
+
+
     while 1: # Основной цикл программы
         timer.tick(60)
         for e in pygame.event.get(): # Обрабатываем события
             if e.type == QUIT:
                 raise SystemExit("QUIT")
             if e.type == KEYDOWN and e.key == K_w:
-                up = True
+                w = True
             if e.type == KEYDOWN and e.key == K_a:
-                left = True
+                a = True
             if e.type == KEYDOWN and e.key == K_d:
-                right = True
+                d = True
 
 
             if e.type == KEYUP and e.key == K_w:
-                up = False
+                w = False
             if e.type == KEYUP and e.key == K_d:
-                right = False
+                d = False
             if e.type == KEYUP and e.key == K_a:
-                left = False
+                a = False
 
 
             if e.type == QUIT:
@@ -144,7 +149,7 @@ def main():
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать
 
 
-        hero.update(left, right, up,platforms) # передвижение
+        hero.update(left, right, up, platforms) # передвижение
         #entities.draw(screen) # отображение
         for e in entities:
             screen.blit(e.image, camera.apply(e))
@@ -152,7 +157,7 @@ def main():
 
         pygame.display.update()     # обновление и вывод всех изменений на экран
 
-        hero_2.update(left, right, up, platforms)  # передвижение
+        hero_2.update(a, d, w, platforms)  # передвижение
         # entities.draw(screen) # отображение
         for e in entities:
             screen.blit(e.image, camera.apply(e))

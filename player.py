@@ -5,11 +5,11 @@ from pygame import *
 import pyganim
 import os
 
-MOVE_SPEED = 7
+MOVE_SPEED = 5
 WIDTH = 16
 HEIGHT = 26
 COLOR =  "#888888"
-JUMP_POWER = 10
+JUMP_POWER = 8.5
 GRAVITY = 0.35 # Сила, которая будет тянуть нас вниз
 ANIMATION_DELAY = 0.1 # скорость смены кадров
 ICON_DIR = os.path.dirname(__file__) #  Полный путь к каталогу с файлами
